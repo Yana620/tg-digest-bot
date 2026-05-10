@@ -400,7 +400,9 @@ async def agent_loop(user_id: int, user_message: str) -> tuple[str, dict | None]
 
         # Claude хоче викликати tools
         if response.stop_reason == "tool_use":
-            histories[user_id].append({"role": "assistant", "content": response.content})
+            assistant_msg = {"role": "assistant", "content": response.content}
+            histories[user_id].append(assistant_msg)
+            history.append(assistant_msg)
 
             tool_results = []
             for block in response.content:
