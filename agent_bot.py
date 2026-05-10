@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 API_ID       = int(os.environ["TELEGRAM_API_ID"])
 API_HASH     = os.environ["TELEGRAM_API_HASH"]
 SESSION      = os.environ["TELEGRAM_SESSION_STRING"]
-BOT_TOKEN    = os.environ["TELEGRAM_AGENT_BOT_TOKEN"]   # окремий бот!
+BOT_TOKEN    = os.environ.get("TELEGRAM_AGENT_BOT_TOKEN") or os.environ["TELEGRAM_BOT_TOKEN"]
 ANTHROPIC_KEY = os.environ["ANTHROPIC_API_KEY"]
 MY_CHAT_ID   = int(os.environ["MY_TELEGRAM_CHAT_ID"])
 
