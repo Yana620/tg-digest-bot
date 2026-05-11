@@ -36,9 +36,16 @@
 
 Скачай репозиторий и запусти скрипт:
 
+**Windows:**
 ```bash
 pip install telethon
 python setup.py
+```
+
+**Mac:**
+```bash
+pip3 install telethon
+python3 setup.py
 ```
 
 Скрипт спросит твои данные, подтвердит номер телефона через Telegram и выдаст **готовые переменные** для вставки в Railway.
@@ -75,7 +82,11 @@ python setup.py
 pip install telegram-mcp
 ```
 
-Добавь в конфиг Claude Desktop (`claude_desktop_config.json`):
+Найди файл конфига Claude Desktop:
+- **Mac:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+Добавь в него:
 ```json
 {
   "mcpServers": {
