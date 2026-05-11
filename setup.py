@@ -16,9 +16,10 @@ except ImportError:
     print("❌ Установи зависимости: pip install telethon qrcode")
     sys.exit(1)
 
-# ── Общие credentials (одинаковые для всех) ──────────────────────────────────
-API_ID   = 32766254
-API_HASH = "38b8e8ee69914c2404cf84efdb07cfd9"
+# ── Credentials (каждый вводит свои с my.telegram.org) ───────────────────────
+print("\n🔑 Введи свои данные с my.telegram.org (App api_id и App api_hash):")
+API_ID   = int(input("  API_ID → ").strip())
+API_HASH = input("  API_HASH → ").strip()
 
 BANNER = """
 ╔══════════════════════════════════════════════════╗
