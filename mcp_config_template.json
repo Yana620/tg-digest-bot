@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "telegram": {
+      "command": "python",
+      "args": ["-m", "telegram_mcp"],
+      "env": {
+        "TELEGRAM_API_ID": "ВСТАВЬ_API_ID",
+        "TELEGRAM_API_HASH": "ВСТАВЬ_API_HASH",
+        "TELEGRAM_SESSION_STRING": "ВСТАВЬ_SESSION_STRING"
+      }
+    }
+  }
+}

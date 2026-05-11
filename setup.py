@@ -59,6 +59,41 @@ async def generate_session() -> str:
     return session, me.id
 
 
+def print_mcp_config(api_id: int, api_hash: str, session_string: str):
+    """Виводить готовий конфіг для Claude Desktop MCP."""
+    print("""
+╔══════════════════════════════════════════════════╗
+║         MCP-коннектор для Claude Desktop          ║
+╚══════════════════════════════════════════════════╝
+
+1. Установи telegram-mcp:
+   pip install telegram-mcp       (Windows)
+   pip3 install telegram-mcp      (Mac)
+
+2. Открой файл конфига Claude Desktop:
+   Mac:     ~/Library/Application Support/Claude/claude_desktop_config.json
+   Windows: %APPDATA%\\Claude\\claude_desktop_config.json
+
+3. Вставь туда этот конфиг (или добавь в существующий):
+""")
+    import json
+    config = {
+        "mcpServers": {
+            "telegram": {
+                "command": "python",
+                "args": ["-m", "telegram_mcp"],
+                "env": {
+                    "TELEGRAM_API_ID": str(api_id),
+                    "TELEGRAM_API_HASH": api_hash,
+                    "TELEGRAM_SESSION_STRING": session_string,
+                }
+            }
+        }
+    }
+    print(json.dumps(config, indent=2, ensure_ascii=False))
+    print("\n4. Перезапусти Claude Desktop — в боковой панели появится Telegram.")
+
+
 def print_env_vars(session_string: str, chat_id: int):
     """Виводить готові змінні для Railway."""
 
@@ -109,6 +144,7 @@ async def main():
     try:
         session_string, chat_id = await generate_session()
         print_env_vars(session_string, chat_id)
+        print_mcp_config(API_ID, API_HASH, session_string)
     except KeyboardInterrupt:
         print("\n\n⛔ Отменено.")
     except Exception as e:
