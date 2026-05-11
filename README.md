@@ -1,46 +1,66 @@
 # Telegram Claude Agent
 
-Персональный AI-ассистент, который подключается к твоему Telegram и отвечает на любые запросы на естественном языке через Claude.
+Персональный AI-ассистент, подключённый к твоему Telegram. Общаешься с ним как с Claude напрямую — он читает твои чаты, делает сводки, ищет сообщения, помогает с ответами.
 
-Пишешь боту что угодно — он сам решает что делать: читает чаты, ищет сообщения, делает сводки, готовит ответы.
-
-**Примеры:**
-- *"Что важного пропустила за последние 3 дня?"*
-- *"Найди все сообщения про проект X"*
+**Примеры запросов:**
+- *"Что важного пропустил за последние 3 дня?"*
 - *"Сделай саммари непрочитанных в рабочих чатах"*
+- *"Найди все сообщения про проект X"*
 - *"Напиши Даниилу что буду через 10 минут"*
 
 ---
 
-## Быстрый старт — 5 шагов (~20 минут)
+## Что понадобится
 
-### Шаг 1 — Получи Telegram API ключи
+- Python 3.10+ (проверь: `python --version` или `python3 --version`)
+- Аккаунт на [railway.app](https://railway.app) (бесплатно)
+- Личный аккаунт Telegram
+- Личный аккаунт Anthropic ([console.anthropic.com](https://console.anthropic.com))
 
-1. Открой [my.telegram.org](https://my.telegram.org) и войди через свой номер
-2. → **API development tools** → создай приложение (название любое)
-3. Скопируй **App api_id** и **App api_hash**
+---
 
-### Шаг 2 — Создай Telegram бота
+## Установка — пошагово
 
-1. Открой [@BotFather](https://t.me/BotFather) в Telegram
-2. `/newbot` → придумай название → придумай username (должен заканчиваться на `_bot`)
-3. Скопируй **токен** (формат `1234567890:ABCdef...`)
+### Шаг 1 — Скачай репозиторий
 
-### Шаг 3 — Получи Anthropic API ключ
+```bash
+# Mac / Linux
+git clone https://github.com/Yana620/tg-digest-bot.git
+cd tg-digest-bot
+
+# Или просто скачай ZIP через кнопку Code → Download ZIP на GitHub
+```
+
+### Шаг 2 — Получи Telegram API ключи
+
+1. Открой [my.telegram.org](https://my.telegram.org) в браузере
+2. Войди через свой номер телефона (придёт код в Telegram)
+3. Нажми **API development tools**
+4. Заполни форму (название и платформа — любые, например "My Agent" / "Desktop")
+5. Нажми **Create application**
+6. Скопируй и сохрани:
+   - `App api_id` — число, например `12345678`
+   - `App api_hash` — строка, например `abc123def456...`
+
+### Шаг 3 — Создай Telegram бота
+
+1. Открой Telegram, найди [@BotFather](https://t.me/BotFather)
+2. Напиши `/newbot`
+3. Придумай **название** бота (например: `My Claude Agent`)
+4. Придумай **username** — должен заканчиваться на `_bot` (например: `my_claude_agent_bot`)
+5. BotFather пришлёт **токен** — длинная строка вида `8619134257:AAE3b7t2f60x...`
+6. Сохрани этот токен
+
+### Шаг 4 — Получи Anthropic API ключ
 
 1. Зарегистрируйся на [console.anthropic.com](https://console.anthropic.com)
-2. **Settings → API Keys → Create Key**
-3. Пополни баланс на $5 (хватит на ~500 запросов)
+2. Перейди в **Settings → API Keys → Create Key**
+3. Скопируй ключ (начинается с `sk-ant-...`)
+4. Пополни баланс на $5 — этого хватит примерно на 500 запросов
 
-### Шаг 4 — Сгенерируй сессию и переменные
+### Шаг 5 — Запусти setup.py
 
-Скачай репозиторий и запусти скрипт:
-
-**Windows:**
-```bash
-pip install telethon
-python setup.py
-```
+Установи зависимость и запусти скрипт:
 
 **Mac:**
 ```bash
@@ -48,45 +68,65 @@ pip3 install telethon
 python3 setup.py
 ```
 
-Скрипт спросит твои данные, подтвердит номер телефона через Telegram и выдаст **готовые переменные** для вставки в Railway.
+**Windows:**
+```bash
+pip install telethon
+python setup.py
+```
 
-### Шаг 5 — Деплой на Railway
+Скрипт спросит:
+- `API_ID` и `API_HASH` — из Шага 2
+- Номер телефона Telegram — придёт код подтверждения
+- Код из Telegram
+- Если есть 2FA — пароль
 
-1. Зарегистрируйся на [railway.app](https://railway.app) (бесплатно)
-2. **New Project → Deploy from GitHub repo** → выбери этот репозиторий
-3. Перейди в **Variables** и добавь 6 переменных из setup.py:
+В конце скрипт выдаст:
+1. **Переменные для Railway** — скопируй их, они нужны в Шаге 6
+2. **Конфиг для Claude Desktop** — если хочешь подключить MCP (Шаг 8)
 
-| Переменная | Откуда |
+### Шаг 6 — Задеплой на Railway
+
+1. Зайди на [railway.app](https://railway.app) → войди через GitHub
+2. Нажми **New Project → Deploy from GitHub repo**
+3. Выбери репозиторий `tg-digest-bot`
+4. Перейди в **Variables** и добавь 6 переменных (значения берёшь из вывода setup.py):
+
+| Переменная | Описание |
 |---|---|
-| `TELEGRAM_API_ID` | my.telegram.org |
-| `TELEGRAM_API_HASH` | my.telegram.org |
-| `TELEGRAM_SESSION_STRING` | генерирует setup.py |
-| `TELEGRAM_BOT_TOKEN` | @BotFather |
-| `ANTHROPIC_API_KEY` | console.anthropic.com |
-| `MY_TELEGRAM_CHAT_ID` | генерирует setup.py |
+| `TELEGRAM_API_ID` | Из my.telegram.org |
+| `TELEGRAM_API_HASH` | Из my.telegram.org |
+| `TELEGRAM_SESSION_STRING` | Генерирует setup.py |
+| `TELEGRAM_BOT_TOKEN` | Токен от @BotFather |
+| `ANTHROPIC_API_KEY` | Ключ от Anthropic |
+| `MY_TELEGRAM_CHAT_ID` | Генерирует setup.py |
 
-4. Railway автоматически задеплоит — через 2 минуты бот живой ✅
+5. Railway автоматически задеплоит — подожди 2 минуты
 
-Напиши своему боту `/start` — он должен ответить.
+### Шаг 7 — Проверь что работает
+
+Открой Telegram, найди своего бота по username и напиши `/start` — он должен ответить.
+
+Попробуй написать: *"Покажи мои последние чаты"* — бот обратится к Claude и прочитает твой Telegram.
 
 ---
 
-## MCP-коннектор для Claude Desktop / Claude Code
+## Шаг 8 (опционально) — MCP-коннектор для Claude Desktop
 
-Если хочешь управлять Telegram напрямую из Claude Desktop (без отдельного бота):
+Если хочешь управлять Telegram прямо из Claude Desktop (без отдельного бота):
 
-**Репозиторий:** [github.com/chigwell/telegram-mcp](https://github.com/chigwell/telegram-mcp)
+**1. Установи telegram-mcp:**
 
-Установка:
 ```bash
-pip install telegram-mcp
+pip3 install telegram-mcp   # Mac
+pip install telegram-mcp    # Windows
 ```
 
-Найди файл конфига Claude Desktop:
-- **Mac:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+**2. Найди файл конфига Claude Desktop:**
+- Mac: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
-Добавь в него:
+**3. Вставь конфиг** (setup.py сгенерировал его автоматически с твоими данными):
+
 ```json
 {
   "mcpServers": {
@@ -103,13 +143,17 @@ pip install telegram-mcp
 }
 ```
 
+**4. Перезапусти Claude Desktop** — в боковой панели появится иконка Telegram.
+
+Шаблон конфига также лежит в файле `mcp_config_template.json` в этом репозитории.
+
 ---
 
 ## Безопасность
 
-- `TELEGRAM_SESSION_STRING` — **никому не передавай**, это полный доступ к твоему Telegram
-- Бот отвечает **только тебе** (защита по Telegram ID)
-- Если что-то пошло не так: Telegram → Настройки → Конфиденциальность → Активные сеансы → Завершить все
+- `TELEGRAM_SESSION_STRING` — **никому не передавай**, это полный доступ к твоему Telegram аккаунту
+- Бот отвечает **только тебе** — защита по Telegram ID, посторонние не смогут им пользоваться
+- Если что-то пошло не так или хочешь отозвать доступ: Telegram → Настройки → Конфиденциальность → Активные сеансы → завершить нужный сеанс
 
 ---
 
@@ -120,3 +164,5 @@ pip install telegram-mcp
 | `/start` | Приветствие и список возможностей |
 | `/clear` | Сбросить контекст разговора |
 | `/help` | Примеры запросов |
+
+Всё остальное — просто пиши на естественном языке.

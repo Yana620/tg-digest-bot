@@ -23,7 +23,7 @@ API_HASH = input("  API_HASH → ").strip()
 
 BANNER = """
 ╔══════════════════════════════════════════════════╗
-║        Telegram Digest Bot — Setup Wizard        ║
+║       Telegram Claude Agent — Setup Wizard       ║
 ║  Генерирует все переменные для деплоя на Railway  ║
 ╚══════════════════════════════════════════════════╝
 """
